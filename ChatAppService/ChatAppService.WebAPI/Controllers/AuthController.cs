@@ -13,7 +13,7 @@ namespace ChatAppService.WebAPI.Controllers
     public sealed class AuthController(ApplicationDbContext context) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Register([FromForm] RegisterDto registerDto, CancellationToken cancellationToken)
         {
             bool isNameExists = await context.Users.AnyAsync(p=> p.Name == registerDto.Name,cancellationToken);
             if (isNameExists)
@@ -29,7 +29,7 @@ namespace ChatAppService.WebAPI.Controllers
             };
             await context.AddAsync(user,cancellationToken);
             await context.SaveChangesAsync();
-            return Ok();
+            return Ok(user);
         }
         [HttpGet]
         public async Task<IActionResult> Login ( string name, CancellationToken cancellationToken)

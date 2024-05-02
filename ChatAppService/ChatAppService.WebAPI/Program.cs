@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
     {
         builder.WithOrigins("http://localhost:4200", "http://localhost:59814")
-               .AllowAnyHeader();
+               .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
     });
 });
 builder.Services.AddSignalR();
@@ -27,12 +27,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.MapHub<ChatHub>("/chat-hub");
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<ChatHub>("/chat-hub");
+
 app.UseCors();
 app.Run();

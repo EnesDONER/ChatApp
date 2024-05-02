@@ -11,8 +11,16 @@ namespace ChatAppService.WebAPI.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public sealed class ChatController(ApplicationDbContext context,IHubContext<ChatHub> hubContext) : ControllerBase
+    public sealed class ChatsController(ApplicationDbContext context,IHubContext<ChatHub> hubContext) : ControllerBase
     {
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            List<User> users = await context.Users.OrderBy(p=> p.Name).ToListAsync();
+            return Ok(users);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetChats(Guid userId, Guid toUserId, CancellationToken cancellationToken)
         {
@@ -42,7 +50,7 @@ namespace ChatAppService.WebAPI.Controllers
 
             await hubContext.Clients.Client(connectionId).SendAsync("Messages", chat);
 
-            return Ok();
+            return Ok(chat);
         }
     }
 }
