@@ -6,6 +6,7 @@ import { ChatModel } from '../../models/chat.model';
 import * as signalR from '@microsoft/signalr';
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -14,6 +15,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+ 
+  public Status = Status;
   users : UserModel[] = [];
   chats :ChatModel[] = [];
   selectedUserId: string = "";
@@ -22,7 +25,10 @@ export class HomeComponent {
   hub: signalR.HubConnection | undefined;
   message:string="";
   unreadMessages:ChatModel[] = [];
-  public Status = Status;
+
+
+
+
   constructor(private http:HttpClient){
     this.user = JSON.parse(localStorage.getItem("accessToken")??"");
     this.getUsers();
@@ -51,18 +57,28 @@ export class HomeComponent {
       if(this.selectedUserId == res.userId){
         this.chats.push(res);
       }
-  
+      if(this.selectedUser != res.userId && this.user.id == res.toUserId){
+        this.unreadMessages.push(res);
+        console.log(this.unreadMessages)
+      }
     })
 
   }
-
+  changeUnreadMessage(){
+    this.unreadMessages = this.unreadMessages.filter(unreadMessage=> 
+      unreadMessage.userId != this.selectedUserId &&
+      unreadMessage.toUserId == this.user.id
+    );
+  }
 
   getUsers(){
     this.http.get<UserModel[]>("https://localhost:7098/api/Chats/GetUsers").subscribe(res=>{
       this.users =res.filter(p => p.id != this.user.id )
     })
   }
-
+  countUnreadMessagesByUserId(userId: string): number {
+    return this.unreadMessages.filter(message => message.userId === userId).length;
+  }
   changeUser(user: UserModel){
     this.selectedUserId = user.id;
     this.selectedUser = user;
@@ -70,8 +86,8 @@ export class HomeComponent {
     this.http.get(`https://localhost:7098/api/Chats/GetChats?userId=${this.user.id}&toUserId=${this.selectedUserId}`)
     .subscribe((res:any)=>{
       this.chats =res;
-
     });
+  this.changeUnreadMessage();
     
   
   }
@@ -92,7 +108,7 @@ export class HomeComponent {
       this.chats.push(res);
       this.message = "";
     });
-    
+
   }
 }
 

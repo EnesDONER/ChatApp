@@ -16,12 +16,15 @@
                         
                         <li class="clearfix" [ngClass]="selectedUserId == user.id ? 'active' : ''" (click)="changeUser(user)">
                         
-                            <span style="float: right;" class="top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @if(countUnreadMessagesByUserId(user.id)>0){
+                                <span style="float: right;" class="top-0 start-100 translate-middle badge rounded-pill bg-danger">
 
-                                     {{unreadMessages.length}}
-                             
-                                 <span class="visually-hidden">unread messages</span>
-                               </span>
+                                    {{countUnreadMessagesByUserId(user.id)}}
+                            
+                                <span class="visually-hidden">unread messages</span>
+                              </span>
+                            }
+                 
                            
                           
                             <img src="https://localhost:7098/avatar/{{user.avatar}}" alt="avatar">
@@ -39,7 +42,7 @@
                     </ul>
                 </div>
                 @if(selectedUserId){
-                  <div class="chat">
+                  <div (click)="changeUnreadMessage()" class="chat">
                     <div class="chat-header clearfix">
                         <div class="row">
                             <div class="col-lg-6">
@@ -48,7 +51,10 @@
                                 </a>
                                 <div class="chat-about">
                                     <h6 class="m-b-0">{{selectedUser.name}}</h6>
-                                    <small>{{selectedUser.status}}</small>
+                                   <div class="status"> 
+                                    <i class="fa fa-circle" [ngClass]="selectedUser.status !== Status.Online ? 'online' : 'offline'"></i> 
+                                    {{ selectedUser.status !== Status.Online ? 'online' : 'offline' }} 
+                                  </div>
                                 </div>
                             </div>                         
                         </div>
