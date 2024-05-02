@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { UserModel } from '../../models/user.model';
+import { UserModel ,Status} from '../../models/user.model';
 import { ChatModel } from '../../models/chat.model';
 import * as signalR from '@microsoft/signalr';
 import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -20,6 +21,8 @@ export class HomeComponent {
   user = new UserModel();
   hub: signalR.HubConnection | undefined;
   message:string="";
+  unreadMessages:ChatModel[] = [];
+  public Status = Status;
   constructor(private http:HttpClient){
     this.user = JSON.parse(localStorage.getItem("accessToken")??"");
     this.getUsers();
@@ -48,12 +51,11 @@ export class HomeComponent {
       if(this.selectedUserId == res.userId){
         this.chats.push(res);
       }
-    })
-    
-
   
+    })
 
   }
+
 
   getUsers(){
     this.http.get<UserModel[]>("https://localhost:7098/api/Chats/GetUsers").subscribe(res=>{
@@ -64,17 +66,23 @@ export class HomeComponent {
   changeUser(user: UserModel){
     this.selectedUserId = user.id;
     this.selectedUser = user;
+
     this.http.get(`https://localhost:7098/api/Chats/GetChats?userId=${this.user.id}&toUserId=${this.selectedUserId}`)
     .subscribe((res:any)=>{
       this.chats =res;
+
     });
-    //this.chats = Chats.filter(p=> p.toUserId == user.id && p.userId == "0" || p.userId == user.id && p.toUserId == "0");
+    
+  
   }
   logout(){
     localStorage.clear();
     document.location.reload();
   }
   sendMessage(){
+    if(this.message==""){
+      return;
+    }
     const data = {
       "userId": this.user.id,
       "toUserId": this.selectedUserId,

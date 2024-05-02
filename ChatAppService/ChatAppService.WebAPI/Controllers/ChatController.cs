@@ -46,9 +46,16 @@ namespace ChatAppService.WebAPI.Controllers
             };
             await context.AddAsync(chat,cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
-            string connectionId = ChatHub.Users.First(p => p.Value == chat.ToUserId).Key;
 
-            await hubContext.Clients.Client(connectionId).SendAsync("Messages", chat);
+            Status userStatus =  context.Users.First(p => p.Id == chat.ToUserId).Status;
+            if(userStatus == Status.Online)
+            {
+                string connectionId = ChatHub.Users.First(p => p.Value == chat.ToUserId).Key;
+
+                await hubContext.Clients.Client(connectionId).SendAsync("Messages", chat);
+            }
+
+           
 
             return Ok(chat);
         }

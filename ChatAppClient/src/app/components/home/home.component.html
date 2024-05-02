@@ -13,11 +13,26 @@
                     </div>
                     <ul class="list-unstyled chat-list mt-2 mb-0">
                       @for(user of users; track user){
+                        
                         <li class="clearfix" [ngClass]="selectedUserId == user.id ? 'active' : ''" (click)="changeUser(user)">
+                        
+                            <span style="float: right;" class="top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+                                     {{unreadMessages.length}}
+                             
+                                 <span class="visually-hidden">unread messages</span>
+                               </span>
+                           
+                          
                             <img src="https://localhost:7098/avatar/{{user.avatar}}" alt="avatar">
                             <div class="about">
+                             
                                 <div class="name">{{user.name}}</div>
-                                <div class="status"> <i class="fa fa-circle" [ngClass]="user.status === 'online' ? 'online' : 'offline'"></i> {{user.status}} </div>                                            
+                                <div class="status"> 
+                                    <i class="fa fa-circle" [ngClass]="user.status !== Status.Online ? 'online' : 'offline'"></i> 
+                                    {{ user.status !== Status.Online ? 'Online' : 'Offline' }} 
+                                  </div>
+                                  
                             </div>
                         </li>
                       }                      
@@ -44,14 +59,14 @@
                             @if(selectedUserId != chat.userId){
                               <li class="clearfix d-flex" style="flex-direction: column; width: 100%; align-items:flex-end;">
                                 <div class="message-data">                                
-                                    <span class="message-data-time">{{chat.date}}</span>                                 
+                                    <span class="message-data-time">{{chat.date | date:'shortTime'}} </span>                                 
                                 </div>
                                 <div class="message other-message"> {{chat.message}} </div>
                             </li>
                             }@else {
                               <li class="clearfix">
                                 <div class="message-data">
-                                    <span class="message-data-time">{{chat.date}}</span>
+                                    <span class="message-data-time">{{chat.date | date:'shortTime'}}</span>
                                 </div>
                                 <div class="message my-message">{{chat.message}}</div>                                    
                             </li>

@@ -12,7 +12,7 @@ namespace ChatAppService.WebAPI.Hubs
             Users.Add(Context.ConnectionId, userId);
             User? user = await context.Users.FindAsync(userId);
             if (user is not null) {
-                user.Status = "online";
+                user.Status = Status.Online;
                 await context.SaveChangesAsync();
                 await Clients.All.SendAsync("Users", user);
             }
@@ -25,10 +25,11 @@ namespace ChatAppService.WebAPI.Hubs
             User? user = await context.Users.FindAsync(userId);
             if (user is not null)
             {
-                user.Status = "offline";
+                user.Status = Status.Offline;
                 await context.SaveChangesAsync();
                 await Clients.All.SendAsync("Users", user);
             }
         }
+
     }
 }

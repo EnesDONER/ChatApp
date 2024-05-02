@@ -40,7 +40,7 @@ namespace ChatAppService.WebAPI.Controllers
                 return BadRequest(new { Message = "User can not found" });
             }
 
-            user.Status = "online";
+            user.Status = Status.Online;
             await context.SaveChangesAsync(cancellationToken);
             
             return Ok(user);
