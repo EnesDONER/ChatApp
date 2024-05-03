@@ -7,6 +7,7 @@ namespace ChatAppService.WebAPI.Hubs
     public sealed class ChatHub(ApplicationDbContext context):Hub
     {
         public static Dictionary<string,Guid> Users = new();
+        public static Dictionary<List<string>,Guid> Groups = new();
         public async Task Connect(Guid userId)
         {
             Users.Add(Context.ConnectionId, userId);
@@ -17,6 +18,7 @@ namespace ChatAppService.WebAPI.Hubs
                 await Clients.All.SendAsync("Users", user);
             }
         }
+ 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             Guid userId;
