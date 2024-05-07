@@ -7,18 +7,20 @@ import { ChatModel } from '../../models/chat.model';
 import * as signalR from '@microsoft/signalr';
 import { FormsModule } from '@angular/forms';
 import { GroupModel } from '../../models/group.model';
+import { SearchPipe } from '../../pipes/search.pipe';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,SearchPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
  
   public Status = Status;
+  filter:string="";
   users : UserModel[] = [];
   chats :ChatModel[] = [];
   groupChats :GroupChatModel[] = [];

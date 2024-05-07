@@ -1,6 +1,6 @@
 
 <div class="container">
-
+ 
     <div class="row clearfix">
       <div>
         <h1 class="alert alert-success text-center mt-2">ChatAPP</h1>
@@ -10,13 +10,13 @@
             <div class="card chat-app">
                 <div id="plist" class="people-list">
                     <div class="input-group" style="position: relative;">                      
-                        <input type="text" class="form-control" placeholder="Search..." style="padding-left:35px;">
+                        <input type="text" [(ngModel)]="filter" class="form-control" placeholder="Search..." style="padding-left:35px;">
                         <i class="fa fa-search" style="position: absolute; top:10px; left: 15px;"></i>
                     </div>
                   
                     <ul class="list-unstyled chat-list mt-2 mb-0">
                    
-                      @for (group of groups; track $index) {
+                      @for (group of groups | search:filter; track $index) {
                         <li class="clearfix" [ngClass]="selectedGroupId == group.id ? 'active' : ''" (click)="changeGroup(group)"> 
                           @if(countUnreadGroupMessagesByUserId(group.id)>0){
                             <span style="float: right;" class="top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -32,8 +32,8 @@
                           <div class="name">{{group.name}}</div> 
                         </li>
                       }
-                      @for(user of users; track user){
-                        
+                      @for(user of users | search:filter ; track user  ){
+                         
                         <li class="clearfix" [ngClass]="selectedUserId == user.id ? 'active' : ''" (click)="changeUser(user)">
                         
                             @if(countUnreadMessagesByUserId(user.id)>0){
