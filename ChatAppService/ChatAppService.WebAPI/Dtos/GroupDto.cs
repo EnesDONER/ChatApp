@@ -1,7 +1,8 @@
 ﻿namespace ChatAppService.WebAPI.Dtos
 {
     public sealed record GroupDto(
-        List<Guid> UserId,
-        string GroupName
-        );
+        IList<Guid> UserId,
+        string GroupName,
+        IFormFile File
+    );
 }

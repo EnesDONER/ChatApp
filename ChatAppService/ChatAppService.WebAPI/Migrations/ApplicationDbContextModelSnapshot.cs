@@ -52,6 +52,10 @@ namespace ChatAppService.WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -109,13 +113,13 @@ namespace ChatAppService.WebAPI.Migrations
 
             modelBuilder.Entity("GroupUser", b =>
                 {
-                    b.Property<Guid>("GrupsId")
+                    b.Property<Guid>("GroupsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UsersId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("GrupsId", "UsersId");
+                    b.HasKey("GroupsId", "UsersId");
 
                     b.HasIndex("UsersId");
 
@@ -126,7 +130,7 @@ namespace ChatAppService.WebAPI.Migrations
                 {
                     b.HasOne("ChatAppService.WebAPI.Models.Group", null)
                         .WithMany()
-                        .HasForeignKey("GrupsId")
+                        .HasForeignKey("GroupsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
